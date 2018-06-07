@@ -1,6 +1,7 @@
-dist
+# elm-package generated files
 elm-stuff
+# elm-repl generated files
+repl-temp-*
+
+dist
 elm.js
-node_modules
-npm-debug.log
-yarn-error.log
