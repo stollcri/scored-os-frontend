@@ -37,10 +37,10 @@ update msg model =
             { model | team = name }
 
         Increment ->
-            { model | score = 1 }
+            { model | score = model.score + 1 }
 
         Decrement ->
-            { model | score = 0 }
+            { model | score = model.score - 1 }
 
 
 -- VIEW
