@@ -68,7 +68,7 @@ update msg model =
         Decrement team ->
             let
                 updateTeam t =
-                    if t == team then
+                    if (t == team) && (team.score > 0) then
                         { t | score = team.score - 1 }
                     else
                         t
