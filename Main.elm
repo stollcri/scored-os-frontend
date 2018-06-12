@@ -33,8 +33,7 @@ model =
 
 type Msg
     = Name Team String
-    | Increment Team
-    | Decrement Team
+    | Score Team Int
 
 update : Msg -> Model -> Model
 update msg model =
@@ -52,24 +51,11 @@ update msg model =
             in
                 { model | teams = updatedTeams }
 
-        Increment team ->
+        Score team score ->
             let
                 updateTeam t =
-                    if t == team then
-                        { t | score = team.score + 1 }
-                    else
-                        t
-
-                updatedTeams =
-                    List.map updateTeam model.teams
-            in
-                { model | teams = updatedTeams }
-
-        Decrement team ->
-            let
-                updateTeam t =
-                    if (t == team) && (team.score > 0) then
-                        { t | score = team.score - 1 }
+                    if (t == team) && (team.score + score >= 0) then
+                        { t | score = team.score + score }
                     else
                         t
 
@@ -88,16 +74,22 @@ view model =
 scorebox : Team -> Html Msg
 scorebox team =
     div []
-    [ input [ type_ "text", value team.name, onInput (Name team), placeholder "Add team name", class "form-control" ] []
+    [ input
+        [ type_ "text"
+        , value team.name
+        , onInput (Name team)
+        , placeholder "Add team name"
+        , class "form-control"
+        ] []
     , div [ class "input-group" ]
         [ div [ class "input-group-prepend" ]
-            [ button [ onClick (Decrement team), class "btn btn-outline-secondary" ]
+            [ button [ onClick (Score team -1), class "btn btn-outline-secondary" ]
                 [ span [ class "glyphicon glyphicon-minus" ] [ text "-" ]
                 ]
             ]
         , input [ type_ "text", value (toString team.score), class "form-control" ] []
         , div [ class "input-group-prepend" ]
-            [ button [ onClick (Increment team), class "btn btn-outline-secondary" ]
+            [ button [ onClick (Score team 1), class "btn btn-outline-secondary" ]
                 [ span [ class "glyphicon glyphicon-plus" ] [ text "+" ]
                 ]
             ]
