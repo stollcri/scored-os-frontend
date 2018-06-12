@@ -88,7 +88,8 @@ view model =
 scorebox : Team -> Html Msg
 scorebox team =
     div []
-    [ div [ class "input-group" ]
+    [ input [ type_ "text", value team.name, onInput (Name team), placeholder "Add team name", class "form-control" ] []
+    , div [ class "input-group" ]
         [ div [ class "input-group-prepend" ]
             [ button [ onClick (Decrement team), class "btn btn-outline-secondary" ]
                 [ span [ class "glyphicon glyphicon-minus" ] [ text "-" ]
