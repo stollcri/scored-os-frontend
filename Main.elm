@@ -11,59 +11,92 @@ main =
 
 -- MODEL
 
-type alias Model =
-    { team: String
+type alias Team =
+    { name: String
     , score: Int
+    }
+
+type alias Model =
+    { teams: List Team
     }
 
 model : Model
 model =
-    { team = "Team A"
-    , score = 0
+    { teams =
+        [ { name = "Team A", score = 0 }
+        , { name = "Team B", score = 0 }
+        ]
     }
 
 
 -- UPDATE
 
 type Msg
-    = Name String
-    | Increment
-    | Decrement
+    = Name Team String
+    | Increment Team
+    | Decrement Team
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Name name ->
-            { model | team = name }
+        Name team name->
+            let
+                updateTeam t =
+                    if t == team then
+                        { t | name = name }
+                    else
+                        t
 
-        Increment ->
-            { model | score = model.score + 1 }
+                updatedTeams =
+                    List.map updateTeam model.teams
+            in
+                { model | teams = updatedTeams }
 
-        Decrement ->
-            { model | score = model.score - 1 }
+        Increment team ->
+            let
+                updateTeam t =
+                    if t == team then
+                        { t | score = team.score + 1 }
+                    else
+                        t
 
+                updatedTeams =
+                    List.map updateTeam model.teams
+            in
+                { model | teams = updatedTeams }
+
+        Decrement team ->
+            let
+                updateTeam t =
+                    if t == team then
+                        { t | score = team.score - 1 }
+                    else
+                        t
+
+                updatedTeams =
+                    List.map updateTeam model.teams
+            in
+                { model | teams = updatedTeams }
 
 -- VIEW
 
 view : Model -> Html Msg
 view model =
     div []
-    [ scorebox model
-    ]
+    (List.map scorebox model.teams)
 
-scorebox : Model -> Html Msg
-scorebox model =
+scorebox : Team -> Html Msg
+scorebox team =
     div []
-    [ input [ type_ "text", onInput Name, placeholder "Team A", class "form-control" ] []
-    , div [ class "input-group" ]
+    [ div [ class "input-group" ]
         [ div [ class "input-group-prepend" ]
-            [ button [ onClick Decrement, class "btn btn-outline-secondary" ]
+            [ button [ onClick (Decrement team), class "btn btn-outline-secondary" ]
                 [ span [ class "glyphicon glyphicon-minus" ] [ text "-" ]
                 ]
             ]
-        , input [ type_ "text", value (toString model.score), class "form-control" ] []
+        , input [ type_ "text", value (toString team.score), class "form-control" ] []
         , div [ class "input-group-prepend" ]
-            [ button [ onClick Increment, class "btn btn-outline-secondary" ]
+            [ button [ onClick (Increment team), class "btn btn-outline-secondary" ]
                 [ span [ class "glyphicon glyphicon-plus" ] [ text "+" ]
                 ]
             ]
