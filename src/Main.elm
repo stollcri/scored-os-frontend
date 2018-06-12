@@ -48,6 +48,12 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
+    [ scorebox model
+    ]
+
+scorebox : Model -> Html Msg
+scorebox model =
+    div []
     [ input [ type_ "text", onInput Name, placeholder "Team A", class "form-control" ] []
     , div [ class "input-group" ]
         [ div [ class "input-group-prepend" ]
