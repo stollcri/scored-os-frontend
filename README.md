@@ -5,7 +5,7 @@ This is my first attempt at an elm front-end, let's see how this goes...
 ## development
 
 ```shell
-npm run watch
+make
 ```
 
 ## Demo Project Ideas
