@@ -11,21 +11,24 @@ main =
 
 -- MODEL
 
-type alias Team =
+type Team
+    = TeamA
+    | TeamB
+
+type alias TeamData =
     { name: String
     , score: Int
     }
 
 type alias Model =
-    { teams: List Team
+    { teamA: TeamData
+    , teamB: TeamData
     }
 
 model : Model
 model =
-    { teams =
-        [ { name = "Team A", score = 0 }
-        , { name = "Team B", score = 0 }
-        ]
+    { teamA = { name = "Team A", score = 0 }
+    , teamB = { name = "Team B", score = 0 }
     }
 
 
@@ -38,45 +41,47 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Name team name->
-            let
-                updateTeam t =
-                    if t == team then
-                        { t | name = name }
-                    else
-                        t
-
-                updatedTeams =
-                    List.map updateTeam model.teams
-            in
-                { model | teams = updatedTeams }
+        Name team name ->
+            case team of
+                TeamA ->
+                    let teamA = model.teamA
+                    in { model | teamA = { teamA | name = name } }
+                TeamB ->
+                    let teamB = model.teamB
+                    in { model | teamB = { teamB | name = name } }
 
         Score team score ->
-            let
-                updateTeam t =
-                    if (t == team) && (team.score + score >= 0) then
-                        { t | score = team.score + score }
-                    else
-                        t
+            case team of
+                TeamA ->
+                    let teamA = model.teamA
+                    in { model | teamA = { teamA | score = updateScore teamA.score score } }
+                TeamB ->
+                    let teamB = model.teamB
+                    in { model | teamB = { teamB | score = updateScore teamB.score score } }
 
-                updatedTeams =
-                    List.map updateTeam model.teams
-            in
-                { model | teams = updatedTeams }
+updateScore : Int -> Int -> Int
+updateScore totalScore score =
+    if totalScore + score >= 0 then
+        totalScore + score
+
+    else
+        totalScore
 
 -- VIEW
 
 view : Model -> Html Msg
 view model =
     div []
-    (List.map scorebox model.teams)
+    [ scorebox TeamA model.teamA
+    , scorebox TeamB model.teamB
+    ]
 
-scorebox : Team -> Html Msg
-scorebox team =
+scorebox : Team -> TeamData -> Html Msg
+scorebox team teamData =
     div []
     [ input
         [ type_ "text"
-        , value team.name
+        , value teamData.name
         , onInput (Name team)
         , placeholder "Add team name"
         , class "form-control"
@@ -87,7 +92,7 @@ scorebox team =
                 [ span [ class "glyphicon glyphicon-minus" ] [ text "-" ]
                 ]
             ]
-        , input [ type_ "text", value (toString team.score), class "form-control" ] []
+        , input [ type_ "text", value (toString teamData.score), class "form-control" ] []
         , div [ class "input-group-prepend" ]
             [ button [ onClick (Score team 1), class "btn btn-outline-secondary" ]
                 [ span [ class "glyphicon glyphicon-plus" ] [ text "+" ]
