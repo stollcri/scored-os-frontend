@@ -1,12 +1,16 @@
 module Main exposing (..)
 
-import Html exposing (Html, Attribute, button, div, form, fieldset, input, span, text)
+import Html exposing (Html, Attribute, button, div, input, span, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 
 
 main = 
-    Html.beginnerProgram { model = model, view = view, update = update }
+    Html.beginnerProgram
+        { model = model
+        , view = view
+        , update = update
+        }
 
 
 -- MODEL
@@ -63,9 +67,9 @@ updateScore : Int -> Int -> Int
 updateScore totalScore score =
     if totalScore + score >= 0 then
         totalScore + score
-
     else
         totalScore
+
 
 -- VIEW
 
