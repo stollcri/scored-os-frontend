@@ -1,5 +1,11 @@
 default: run
 
+mock-server:
+	docker run -p 8080:80 -v $(shell pwd)/server-mock.json:/data/db.json clue/json-server
+
+mock-server-bg:
+	docker run -d -p 8080:80 -v $(shell pwd)/server-mock.json:/data/db.json clue/json-server
+
 build:
 	elm-make Main.elm --output elm.compiled.js --warn
 
