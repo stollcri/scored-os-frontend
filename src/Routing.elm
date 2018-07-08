@@ -5,10 +5,15 @@ import Models exposing (Route(..))
 import UrlParser exposing (..)
 
 
+-- TODO: add game id entry route
+--   map BroadcastRoute (s "games")
+--   -- becomes --
+--   map FindGameRoute (s "games")
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map BroadcastRoute top
+        , map BroadcastRoute (s "games")
         , map TuneInRoute (s "games" </> string)
         ]
 

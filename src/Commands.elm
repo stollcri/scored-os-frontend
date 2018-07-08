@@ -9,15 +9,22 @@ import Messages exposing (..)
 import Models exposing (Game, TeamData)
 
 
-fetchGame : Cmd Msg
-fetchGame =
-    Http.get fetchGameUrl gameDecoder
-        |> RemoteData.sendRequest
-        |> Cmd.map OnFetchGame
+fetchGame : String -> Cmd Msg
+fetchGame gameId =
+    case gameId of
+        "" ->
+            Cmd.none
 
-fetchGameUrl : String
-fetchGameUrl =
-    "http://localhost:8080/games/1"
+        gameId ->
+            Http.get (fetchGameUrl gameId) gameDecoder
+                |> RemoteData.sendRequest
+                |> Cmd.map OnFetchGame
+
+-- PRIVATE
+
+fetchGameUrl : String -> String
+fetchGameUrl gameId =
+    "http://localhost:8080/games/" ++ gameId
 
 gameDecoder : Decode.Decoder Game
 gameDecoder =

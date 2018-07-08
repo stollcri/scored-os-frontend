@@ -13,7 +13,7 @@ import View exposing (view)
 init : Location -> ( Model, Cmd Msg )
 init location =
     let currentRoute = parseLocation location
-    in ( model currentRoute, fetchGame )
+    in ( model currentRoute, (fetchGame "") )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

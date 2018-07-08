@@ -75,7 +75,8 @@ tuneInView model id =
 
         RemoteData.Success game ->
             div []
-                [ text "ok"
+                [ scorebox TeamA game.teamA
+                , scorebox TeamB game.teamB
                 ]
 
         RemoteData.Failure err ->

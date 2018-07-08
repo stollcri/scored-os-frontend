@@ -2,6 +2,7 @@ module Models exposing (..)
 
 import RemoteData exposing (WebData)
 
+
 type Route
     = BroadcastRoute
     | TuneInRoute String
@@ -10,6 +11,7 @@ type Route
 type Team
     = TeamA
     | TeamB
+
 
 type alias TeamData =
     { name: String
@@ -26,6 +28,7 @@ type alias Model =
     , game: Game
     , gameData: WebData Game
     }
+
 
 model : Route -> Model
 model route =

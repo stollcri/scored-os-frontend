@@ -1,11 +1,13 @@
 module Update exposing (..)
 
+import Commands exposing (fetchGame)
 import Messages exposing (..)
 import Models exposing (..)
+import Navigation exposing (Location)
 import Routing exposing (parseLocation)
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Name team name ->
@@ -15,16 +17,21 @@ update msg model =
             ( { model | game = updateGame msg model.game }, Cmd.none )
 
         OnLocationChange location ->
-            let newRoute = parseLocation location
-            in ( { model | route = newRoute }, Cmd.none )
+            updateLocation (parseLocation location) model
 
-        -- TODO: actually load game data
         OnFetchGame gameData ->
-            let
-                result = model
-                _ = Debug.log "RESULT (update)" gameData
-            in 
-                ( result, Cmd.none )
+            ( { model | gameData = gameData }, Cmd.none )
+
+updateLocation : Route -> Model -> ( Model, Cmd Msg )
+updateLocation route model =
+    case route of
+        TuneInRoute gameId ->
+            let newRoute = route
+            in ( { model | route = newRoute }, (fetchGame gameId) )
+
+        _ ->
+            let newRoute = route
+            in ( { model | route = newRoute }, Cmd.none )
 
 updateGame : Msg -> Game -> Game
 updateGame msg game =
