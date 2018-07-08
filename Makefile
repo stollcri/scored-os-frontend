@@ -7,7 +7,7 @@ mock-server-bg:
 	docker run -d -p 8080:80 -v $(shell pwd)/run/server-mock.json:/data/db.json clue/json-server
 
 build:
-	elm-make Main.elm --output elm.compiled.js --warn
+	elm-make src/Main.elm --output run/elm.compiled.js --warn
 
 # work directly with elm files
 # this allows you to see update history (state changes)
