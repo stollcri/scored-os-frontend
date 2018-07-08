@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "watch": "chokidar '**/*.elm' -c 'elm make Main.elm --output elm.compiled.js' --initial"
+    "watch": "chokidar 'src/**/*.elm' -c 'elm make src/Main.elm --output run/elm.compiled.js' --initial"
   },
   "devDependencies": {
     "chokidar-cli": "^1.2.0"
