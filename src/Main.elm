@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (Html, Attribute, button, div, input, span, text)
+import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Navigation exposing (Location)
@@ -100,7 +100,7 @@ matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ UrlParser.map BroadcastRoute top
-        , UrlParser.map TuneInRoute (s "games" </> string)
+        , UrlParser.map TuneInRoute (UrlParser.s "games" </> string)
         ]
 
 parseLocation : Location -> Route
@@ -198,6 +198,12 @@ broadcastView game =
     div []
         [ scorebox TeamA game.teamA
         , scorebox TeamB game.teamB
+        , div []
+            [ br [] []
+            , a [ href "#games/1" ] [ text "games/1" ]
+            , br [] []
+            , a [ href "#games/2" ] [ text "games/2" ]
+            ]
         ]
 
 scorebox : Team -> TeamData -> Html Msg
@@ -229,7 +235,7 @@ tuneInView : Model -> String -> Html Msg
 tuneInView model id =
     case model.gameData of
         RemoteData.NotAsked ->
-            text ""
+            text "?"
 
         RemoteData.Loading ->
             text "Loading ..."
