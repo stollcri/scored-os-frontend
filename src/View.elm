@@ -1,11 +1,6 @@
 module View exposing (..)
 
-import Bootstrap.Button as Button
-import Bootstrap.Grid as Grid
-import Bootstrap.Form as Form
-import Bootstrap.Form.Input as Input
-import Bootstrap.Form.InputGroup as InputGroup
-import Html exposing (Html, Attribute, a, br, button, div, h1, input, span, text)
+import Html exposing (Html, Attribute, a, br, button, div, h1, h2, i, input, section, span, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import RemoteData
@@ -16,8 +11,7 @@ import Messages exposing (..)
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ page model ]
+    page model
 
 page : Model -> Html Msg
 page model  =
@@ -33,65 +27,31 @@ page model  =
 
 viewheader : Html Msg
 viewheader =
-    Grid.row []
-        [ Grid.col []
-            [ h1 []
-                [ text "Mark-a-Score"
+    section [ class "hero is-dark" ]
+        [ div [ class "hero-body" ]
+            [ div [ class "container" ]
+                [ h1 [ class "title" ]
+                    [ text "Mark-a-Score" ]
+                , h2 [ class "subtitle" ]
+                    [ text "Live, local, sports, scores" ]
                 ]
             ]
         ]
 
 broadcastView: Game -> Html Msg
 broadcastView game =
-    Grid.container []
+    div []
         [ viewheader
-        , scoreboard TeamA game.teamA
-        , scoreboard TeamB game.teamB
-        , Grid.row []
-            [ Grid.col []
-                [ Form.form []
-                    [ a [ href "#games/1" ] [ text "games/1" ]
+        , section [ class "section" ]
+            [ div [ class "container" ]
+                [ scoreboard TeamA game.teamA
+                , scoreboard TeamB game.teamB
+                , div [ class "columns" ]
+                    [ div [ class "column" ]
+                        [ a [ href "#games/1" ] [ text "games/1" ] ]
+                    , div [ class "column" ]
+                        [ a [ href "#games/2" ] [ text "games/2" ] ]
                     ]
-                ]
-            ]
-        , Grid.row []
-            [ Grid.col []
-                [ a [ href "#games/2" ] [ text "games/2" ] ]
-            ]
-        ]
-
-scoreboard : Team -> TeamData -> Html Msg
-scoreboard team teamData =
-    Grid.row []
-        [ Grid.col []
-            [ Form.group []
-                [ Input.text
-                    [ Input.attrs
-                        [ placeholder "Add team name"
-                        , value teamData.name
-                        , onInput (Name team)
-                        ]
-                    ]
-                , InputGroup.config
-                    ( InputGroup.text
-                        [ Input.attrs [ value (toString teamData.score) ]
-                        ]
-                    )
-                    |> InputGroup.predecessors
-                        [ InputGroup.button
-                            [ Button.danger
-                            , Button.attrs [ onClick (Score team -1) ]
-                            ]
-                            [ text "-"]
-                        ]
-                    |> InputGroup.successors
-                        [ InputGroup.button
-                            [ Button.success
-                            , Button.attrs [ onClick (Score team 1) ]
-                            ]
-                            [ text "+"]
-                        ]
-                    |> InputGroup.view
                 ]
             ]
         ]
@@ -106,49 +66,50 @@ tuneInView model id =
             text "Loading ..."
 
         RemoteData.Success game ->
-            Grid.container []
+            div []
                 [ viewheader
-                , scorebox TeamA game.teamA
-                , scorebox TeamB game.teamB
+                , section [ class "section" ]
+                    [ div [ class "container" ]
+                        [ scoreboard TeamA game.teamA
+                        , scoreboard TeamB game.teamB
+                        ]
+                    ]
                 ]
 
         RemoteData.Failure err ->
             text (toString err)
 
-scorebox : Team -> TeamData -> Html Msg
-scorebox team teamData =
-    Grid.row []
-        [ Grid.col []
-            [ Form.group []
-                [ Input.text
-                    [ Input.attrs
-                        [ value teamData.name
-                        , disabled True
+scoreboard : Team -> TeamData -> Html Msg
+scoreboard team teamData =
+    div [ class "columns" ]
+        [ div [ class "column" ]
+            [ input
+                [ type_ "text"
+                , value teamData.name
+                , onInput (Name team)
+                , placeholder "Add team name"
+                , class "input"
+                ] []
+            ]
+        , div [ class "column" ]
+            [ div [ class "field has-addons" ]
+                [ div [ class "control" ]
+                    [ a [ onClick (Score team -1), class "button is-primary" ]
+                        [ i [ class "fas fa-minus-circle" ] []
                         ]
                     ]
-                , InputGroup.config
-                    ( InputGroup.text
-                        [ Input.attrs
-                            [ value (toString teamData.score)
-                            , disabled True
-                            ]
+                , div [ class "control is-expanded" ]
+                    [ input
+                        [ type_ "text"
+                        , value (toString teamData.score)
+                        , class "input"
+                        ] []
+                    ]
+                , div [ class "control" ]
+                    [ a [ onClick (Score team 1), class "button is-primary" ]
+                        [ i [ class "fas fa-plus-circle" ] []
                         ]
-                    )
-                    |> InputGroup.predecessors
-                        [ InputGroup.button
-                            [ Button.danger
-                            , Button.attrs [ disabled True ]
-                            ]
-                            [ text "-"]
-                        ]
-                    |> InputGroup.successors
-                        [ InputGroup.button
-                            [ Button.success
-                            , Button.attrs [ disabled True ]
-                            ]
-                            [ text "+"]
-                        ]
-                    |> InputGroup.view
+                    ]
                 ]
             ]
         ]
