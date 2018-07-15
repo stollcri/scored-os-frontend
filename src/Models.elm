@@ -5,6 +5,7 @@ import RemoteData exposing (WebData)
 
 type Route
     = BroadcastRoute
+    | EnterChannelRoute
     | TuneInRoute String
     | NotFoundRoute
 

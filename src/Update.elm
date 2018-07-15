@@ -29,6 +29,10 @@ updateLocation route model =
             let newRoute = route
             in ( { model | route = newRoute }, (fetchGame gameId) )
 
+        EnterChannelRoute ->
+            let newRoute = route
+            in ( { model | route = newRoute }, Cmd.none )
+
         _ ->
             let newRoute = route
             in ( { model | route = newRoute }, Cmd.none )

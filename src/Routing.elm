@@ -13,7 +13,7 @@ matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map BroadcastRoute top
-        , map BroadcastRoute (s "games")
+        , map EnterChannelRoute (s "games")
         , map TuneInRoute (s "games" </> string)
         ]
 
