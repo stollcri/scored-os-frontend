@@ -8,6 +8,7 @@ import Models exposing (..)
 import Messages exposing (..)
 import Views.Header
 import Views.Scoreboard
+import Views.TuneIn
 
 
 view : Model -> Html Msg
@@ -21,7 +22,7 @@ page model  =
             broadcastView model.game
 
         EnterChannelRoute ->
-            enterChannelView
+            enterChannelView model.channel
 
         TuneInRoute id ->
             tuneInView model id
@@ -33,15 +34,14 @@ broadcastView: Game -> Html Msg
 broadcastView game =
     div []
         [ Views.Header.show
-        , Views.Scoreboard.edit TeamA game.teamA TeamB game.teamB
+        , Views.Scoreboard.edit game
         ]
 
-enterChannelView : Html Msg
-enterChannelView =
+enterChannelView : String -> Html Msg
+enterChannelView channel =
     div []
         [ Views.Header.show
-        , section [ class "section" ]
-            [ text "Enter game id:" ]
+        , Views.TuneIn.show channel
         ]
 
 tuneInView : Model -> String -> Html Msg
@@ -64,14 +64,16 @@ tuneInView model id =
         RemoteData.Success game ->
             div []
                 [ Views.Header.show
-                , Views.Scoreboard.show TeamA game.teamA TeamB game.teamB
+                , Views.Scoreboard.show game
                 ]
 
         RemoteData.Failure err ->
             div []
                 [ Views.Header.show
                 , section [ class "section" ]
-                    [ text "Game has ended or is no longer being broadcast" ]
+                    [ div [ class "notification is-warning" ]
+                        [ text "Game has ended or is no longer being broadcast" ]
+                    ]
                 ]
 
 notFoundView : Html Msg
@@ -79,5 +81,5 @@ notFoundView =
     div []
         [ Views.Header.show
         , section [ class "section" ]
-            [ text "Hmmm, I'm not sure what to do with that. Maybe if you click some link you'll find what you're looking for" ]
+            [ text "Hmmm, I'm not sure what to do with that. Maybe try clicking one of the links in the menu" ]
         ]

@@ -8,5 +8,7 @@ import RemoteData exposing (WebData)
 type Msg
     = Name Team String
     | Score Team Int
+    | Channel String
+    | TuneIn
     | OnLocationChange Location
     | OnFetchGame (WebData Game)

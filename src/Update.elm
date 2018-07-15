@@ -1,5 +1,7 @@
 module Update exposing (..)
 
+import Navigation exposing (load)
+
 import Commands exposing (fetchGame)
 import Messages exposing (..)
 import Models exposing (..)
@@ -14,6 +16,12 @@ update msg model =
 
         Score team score ->
             ( { model | game = updateGame msg model.game }, Cmd.none )
+
+        Channel channel ->
+            ( { model | channel = channel }, Cmd.none )
+
+        TuneIn ->
+            ( model, load ("#games/" ++ model.channel) )
 
         OnLocationChange location ->
             updateLocation (parseLocation location) model

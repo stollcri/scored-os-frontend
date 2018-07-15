@@ -1,6 +1,6 @@
 module Views.Scoreboard exposing (edit, show)
 
-import Html exposing (Html, a, div, i, input, section, text)
+import Html exposing (Html, a, button, div, i, input, section, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 
@@ -8,63 +8,77 @@ import Models exposing (..)
 import Messages exposing (..)
 
 
-edit : Team -> TeamData -> Team -> TeamData -> Html Msg
-edit teamA teamAData teamB teamBData =
+edit : Game -> Html Msg
+edit game =
     section [ class "section" ]
         [ div [ class "container" ]
-            [ scoreBox TeamA teamAData False
-            , scoreBox TeamB teamBData False
+            [ scoreBox TeamA game.teamA False
+            , scoreBox TeamB game.teamB False
+            , div [ class "has-text-centered" ]
+                [ a [ class "button is-primary is-hidden" ]
+                    [ text "Broadcast" ]
+                ]
             ]
         ]
 
-show : Team -> TeamData -> Team -> TeamData -> Html Msg
-show teamA teamAData teamB teamBData =
+show : Game -> Html Msg
+show game =
     section [ class "section" ]
         [ div [ class "container" ]
-            [ scoreBox TeamA teamAData True
-            , scoreBox TeamB teamBData True
+            [ scoreBox TeamA game.teamA True
+            , scoreBox TeamB game.teamB True
             ]
         ]
 
 -- PRIVATE
 
 scoreBox : Team -> TeamData -> Bool -> Html Msg
-scoreBox team teamData disabled =
+scoreBox team teamData isDisabled =
     div [ class "columns" ]
-        [ teamName team teamData
-        , teamScore team teamData
+        [ teamName team teamData isDisabled
+        , teamScore team teamData isDisabled
         ]
 
-teamName : Team -> TeamData -> Html Msg
-teamName team teamData =
+teamName : Team -> TeamData -> Bool -> Html Msg
+teamName team teamData isDisabled =
     div [ class "column" ]
         [ input
-            [ type_ "text"
-            , value teamData.name
+            [ class "input"
+            , disabled isDisabled
             , onInput (Name team)
             , placeholder "Add team name"
-            , class "input"
+            , type_ "text"
+            , value teamData.name
             ] []
         ]
 
-teamScore : Team -> TeamData -> Html Msg
-teamScore team teamData =
+teamScore : Team -> TeamData -> Bool -> Html Msg
+teamScore team teamData isDisabled =
     div [ class "column" ]
         [ div [ class "field has-addons" ]
             [ div [ class "control" ]
-                [ a [ onClick (Score team -1), class "button is-primary" ]
+                [ button
+                    [ class "button is-primary"
+                    , disabled isDisabled
+                    , onClick (Score team -1)
+                    ]
                     [ i [ class "fas fa-minus-circle" ] []
                     ]
                 ]
             , div [ class "control is-expanded" ]
                 [ input
-                    [ type_ "text"
+                    [ class "input"
+                    , disabled isDisabled
+                    , type_ "text"
                     , value (toString teamData.score)
-                    , class "input"
                     ] []
                 ]
             , div [ class "control" ]
-                [ a [ onClick (Score team 1), class "button is-primary" ]
+                [ button
+                    [ class "button is-primary"
+                    , disabled isDisabled
+                    , onClick (Score team 1)
+                    ]
                     [ i [ class "fas fa-plus-circle" ] []
                     ]
                 ]

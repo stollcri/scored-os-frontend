@@ -27,6 +27,7 @@ type alias Game =
 type alias Model =
     { route: Route
     , game: Game
+    , channel: String
     , gameData: WebData Game
     }
 
@@ -38,5 +39,6 @@ model route =
         { teamA = { name = "Team A", score = 0 }
         , teamB = { name = "Team B", score = 0 }
         }
+    , channel = ""
     , gameData = RemoteData.NotAsked
     }
