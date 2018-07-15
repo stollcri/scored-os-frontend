@@ -3,7 +3,6 @@ module Update exposing (..)
 import Commands exposing (fetchGame)
 import Messages exposing (..)
 import Models exposing (..)
-import Navigation exposing (Location)
 import Routing exposing (parseLocation)
 
 

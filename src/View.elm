@@ -68,7 +68,11 @@ tuneInView model id =
                 ]
 
         RemoteData.Failure err ->
-            text (toString err)
+            div []
+                [ Views.Header.show
+                , section [ class "section" ]
+                    [ text "Game has ended or is no longer being broadcast" ]
+                ]
 
 notFoundView : Html Msg
 notFoundView = 
