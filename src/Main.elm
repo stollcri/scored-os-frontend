@@ -4,7 +4,7 @@ import Navigation exposing (Location)
 
 import Commands exposing (fetchGame)
 import Messages exposing (..)
-import Models exposing (Model, model)
+import Models exposing (..)
 import Routing exposing (..)
 import Update exposing (update)
 import View exposing (view)
@@ -13,7 +13,13 @@ import View exposing (view)
 init : Location -> ( Model, Cmd Msg )
 init location =
     let currentRoute = parseLocation location
-    in ( model currentRoute, (fetchGame "") )
+    in
+        case currentRoute of
+            TuneInRoute channel ->
+                ( model currentRoute, (fetchGame channel) )
+
+            _ ->
+                ( model currentRoute, (fetchGame "") )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
