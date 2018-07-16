@@ -10,7 +10,7 @@ make
 
 ## Demo Project Ideas
 
-### Mark-a-score
+### Scoredy
 
 An app to keep track of game scores
 

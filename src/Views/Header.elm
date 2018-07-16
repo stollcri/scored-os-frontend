@@ -14,7 +14,7 @@ show =
             [ div [ class "hero-body" ]
                 [ div [ class "container" ]
                     [ h1 [ class "title" ]
-                        [ text "Mark-a-Score" ]
+                        [ text "Scoredy" ]
                     , h2 [ class "subtitle" ]
                         [ text "Live, local, sports, scores" ]
                     ]
