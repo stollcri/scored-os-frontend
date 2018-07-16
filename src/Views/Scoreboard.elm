@@ -1,6 +1,6 @@
 module Views.Scoreboard exposing (edit, show)
 
-import Html exposing (Html, a, button, div, i, input, section, text)
+import Html exposing (Html, button, div, i, input, section, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 
@@ -15,7 +15,7 @@ edit game =
             [ scoreBox TeamA game.teamA False
             , scoreBox TeamB game.teamB False
             , div [ class "has-text-centered" ]
-                [ a [ class "button is-primary is-hidden" ]
+                [ button [ class "button is-primary" ]
                     [ text "Broadcast" ]
                 ]
             ]
