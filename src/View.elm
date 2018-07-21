@@ -2,6 +2,7 @@ module View exposing (..)
 
 import Html exposing (Html, Attribute, a, br, button, div, h1, h2, i, input, section, span, text)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import RemoteData
 
 import Models exposing (..)
@@ -10,6 +11,7 @@ import Views.Header
 import Views.Scoreboard
 import Views.TuneIn
 
+import Debug
 
 view : Model -> Html Msg
 view model =
@@ -19,7 +21,7 @@ page : Model -> Html Msg
 page model  =
     case model.route of
         BroadcastRoute ->
-            broadcastView model.game
+            broadcastView model
 
         EnterChannelRoute ->
             enterChannelView model.channel
@@ -30,12 +32,34 @@ page model  =
         NotFoundRoute ->
             notFoundView
 
-broadcastView: Game -> Html Msg
-broadcastView game =
+broadcastView : Model -> Html Msg
+broadcastView model =
     div []
         [ Views.Header.show
-        , Views.Scoreboard.edit game
+        , Views.Scoreboard.edit model.game
+        , broadcastButton model.auth
         ]
+
+broadcastButton : Auth -> Html Msg
+broadcastButton auth =
+    case auth.accessToken of
+        "" ->
+            div [ class "has-text-centered" ]
+                [ button
+                    [ class "button is-primary"
+                    , onClick (Login)
+                    ]
+                    [ text "Sign In" ]
+                ]
+
+        _ ->
+            div [ class "has-text-centered" ]
+                [ button
+                    [ class "button is-primary"
+                    , onClick (Logout)
+                    ]
+                    [ text "Sign out" ]
+                ]
 
 enterChannelView : String -> Html Msg
 enterChannelView channel =

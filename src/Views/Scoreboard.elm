@@ -14,10 +14,6 @@ edit game =
         [ div [ class "container" ]
             [ scoreBox TeamA game.teamA False
             , scoreBox TeamB game.teamB False
-            , div [ class "has-text-centered" ]
-                [ button [ class "button is-primary" ]
-                    [ text "Broadcast" ]
-                ]
             ]
         ]
 

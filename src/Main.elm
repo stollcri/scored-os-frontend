@@ -6,28 +6,33 @@ import Commands exposing (fetchGame)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (..)
-import Update exposing (update)
+import Update exposing (update, updateAuth)
 import View exposing (view)
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
-    let currentRoute = parseLocation location
+init : Auth -> Location -> ( Model, Cmd Msg )
+init auth location =
+    let
+        currentRoute = parseLocation location
+        model = initialModel auth currentRoute
     in
         case currentRoute of
             TuneInRoute channel ->
-                ( initialModel currentRoute, (fetchGame channel) )
+                ( model, (fetchGame channel) )
 
             _ ->
-                ( initialModel currentRoute, (fetchGame "") )
+                ( model, (fetchGame "") )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    updateAuth UpdateAuth
 
-main : Program Never Model Msg
+-- Got this error?
+--   Expecting an object with a field named ____ but instead got: undefined
+-- When using elm-reactor do not run this program, run Reactor.elm
+main : Program Auth Model Msg
 main = 
-    Navigation.program OnLocationChange
+    Navigation.programWithFlags OnLocationChange
         { init = init
         , view = view
         , update = update

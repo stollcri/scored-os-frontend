@@ -1,12 +1,15 @@
 module Messages exposing (..)
 
-import Models exposing (Game, Team)
+import Models exposing (Auth, Game, Team)
 import Navigation exposing (Location)
 import RemoteData exposing (WebData)
 
 
 type Msg
-    = Name Team String
+    = Login
+    | Logout
+    | UpdateAuth Auth
+    | Name Team String
     | Score Team Int
     | Channel String
     | TuneIn

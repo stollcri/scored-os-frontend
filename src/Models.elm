@@ -14,6 +14,12 @@ type Team
     | TeamB
 
 
+type alias Auth =
+    { accessToken: String
+    , idToken: String
+    , expiresAt: String
+    }
+
 type alias TeamData =
     { name: String
     , score: Int
@@ -25,16 +31,18 @@ type alias Game =
     }
 
 type alias Model =
-    { route: Route
+    { auth: Auth
+    , route: Route
     , game: Game
     , channel: String
     , gameData: WebData Game
     }
 
 
-initialModel : Route -> Model
-initialModel route =
-    { route = route
+initialModel : Auth -> Route -> Model
+initialModel auth route =
+    { auth = auth
+    , route = route
     , game =
         { teamA = { name = "Team A", score = 0 }
         , teamB = { name = "Team B", score = 0 }

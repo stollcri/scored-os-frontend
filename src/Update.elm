@@ -1,4 +1,4 @@
-module Update exposing (..)
+port module Update exposing (..)
 
 import Navigation exposing (load)
 
@@ -6,11 +6,24 @@ import Commands exposing (fetchGame)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (parseLocation)
+import Debug
 
+port login : String -> Cmd msg
+port logout : String -> Cmd msg
+port updateAuth : (Auth -> msg) -> Sub msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        Login ->
+            ( model, login "" )
+
+        Logout ->
+            ( model, logout "" )
+
+        UpdateAuth auth ->
+            ( { model | auth = auth }, Cmd.none )
+
         Name team name ->
             ( { model | game = updateGame msg model.game }, Cmd.none )
 
