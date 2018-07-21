@@ -16,10 +16,10 @@ init location =
     in
         case currentRoute of
             TuneInRoute channel ->
-                ( model currentRoute, (fetchGame channel) )
+                ( initialModel currentRoute, (fetchGame channel) )
 
             _ ->
-                ( model currentRoute, (fetchGame "") )
+                ( initialModel currentRoute, (fetchGame "") )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

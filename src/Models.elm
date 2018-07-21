@@ -32,8 +32,8 @@ type alias Model =
     }
 
 
-model : Route -> Model
-model route =
+initialModel : Route -> Model
+initialModel route =
     { route = route
     , game =
         { teamA = { name = "Team A", score = 0 }
