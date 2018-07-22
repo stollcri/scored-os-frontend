@@ -39,10 +39,10 @@ type alias Model =
     }
 
 
-initialModel : Auth -> Route -> Model
-initialModel auth route =
-    { auth = auth
-    , route = route
+initialModel : Route -> Auth -> Model
+initialModel route auth =
+    { route = route
+    , auth = auth
     , game =
         { teamA = { name = "Team A", score = 0 }
         , teamB = { name = "Team B", score = 0 }

@@ -6,7 +6,7 @@ import Commands exposing (fetchGame)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (parseLocation)
-import Debug
+
 
 port login : String -> Cmd msg
 port logout : String -> Cmd msg
@@ -15,6 +15,9 @@ port updateAuth : (Auth -> msg) -> Sub msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        OnLocationChange location ->
+            updateLocation (parseLocation location) model
+
         Login ->
             ( model, login "" )
 
@@ -35,9 +38,6 @@ update msg model =
 
         TuneIn ->
             ( model, load ("#games/" ++ model.channel) )
-
-        OnLocationChange location ->
-            updateLocation (parseLocation location) model
 
         OnFetchGame gameData ->
             ( { model | gameData = gameData }, Cmd.none )

@@ -14,7 +14,7 @@ init : Auth -> Location -> ( Model, Cmd Msg )
 init auth location =
     let
         currentRoute = parseLocation location
-        model = initialModel auth currentRoute
+        model = initialModel currentRoute auth
     in
         case currentRoute of
             TuneInRoute channel ->

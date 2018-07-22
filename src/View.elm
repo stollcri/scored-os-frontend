@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (Html, Attribute, a, br, button, div, h1, h2, i, input, section, span, text)
+import Html exposing (Html, Attribute, a, br, button, div, h1, h2, i, input, p, section, span, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import RemoteData
@@ -11,7 +11,6 @@ import Views.Header
 import Views.Scoreboard
 import Views.TuneIn
 
-import Debug
 
 view : Model -> Html Msg
 view model =
@@ -37,14 +36,20 @@ broadcastView model =
     div []
         [ Views.Header.show
         , Views.Scoreboard.edit model.game
-        , broadcastButton model.auth
+        , broadcastControls model.auth
+        ]
+
+broadcastControls : Auth -> Html Msg
+broadcastControls auth =
+    div [ class "field is-grouped is-grouped-centered" ]
+        [ broadcastButton auth
         ]
 
 broadcastButton : Auth -> Html Msg
 broadcastButton auth =
     case auth.accessToken of
         "" ->
-            div [ class "has-text-centered" ]
+            p [ class "control" ]
                 [ button
                     [ class "button is-primary"
                     , onClick (Login)
@@ -53,12 +58,12 @@ broadcastButton auth =
                 ]
 
         _ ->
-            div [ class "has-text-centered" ]
+            p [ class "control" ]
                 [ button
                     [ class "button is-primary"
                     , onClick (Logout)
                     ]
-                    [ text "Sign out" ]
+                    [ text "Sign Out" ]
                 ]
 
 enterChannelView : String -> Html Msg

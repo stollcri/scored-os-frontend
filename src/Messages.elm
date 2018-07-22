@@ -6,12 +6,12 @@ import RemoteData exposing (WebData)
 
 
 type Msg
-    = Login
+    = OnLocationChange Location
+    | Login
     | Logout
     | UpdateAuth Auth
     | Name Team String
     | Score Team Int
     | Channel String
     | TuneIn
-    | OnLocationChange Location
     | OnFetchGame (WebData Game)
