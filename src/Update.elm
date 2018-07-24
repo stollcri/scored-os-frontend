@@ -1,8 +1,10 @@
 port module Update exposing (..)
 
 import Navigation exposing (load)
+import RemoteData
+import WebSocket
 
-import Commands exposing (fetchGame)
+import Commands exposing (fetchGame, saveGame)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (parseLocation)
@@ -28,10 +30,30 @@ update msg model =
             ( { model | auth = auth }, Cmd.none )
 
         Name team name ->
-            ( { model | game = updateGame msg model.game }, Cmd.none )
+            ( { model | game = updateGame msg model.game }
+            , (saveGame model.game model.auth)
+            )
 
         Score team score ->
-            ( { model | game = updateGame msg model.game }, Cmd.none )
+            let
+                updatedModel = { model | game = updateGame msg model.game }
+            in
+                ( updatedModel, (saveGame updatedModel.game updatedModel.auth))
+
+        Broadcast ->
+            ( model, (saveGame model.game model.auth) )
+
+        OnSaveGame gameData ->
+            case gameData of
+                RemoteData.Success game ->
+                    let
+                        modelGame = model.game
+                        updatedGame = { modelGame | id = game.id }
+                    in
+                        ( { model | game = updatedGame }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         Channel channel ->
             ( { model | channel = channel }, Cmd.none )

@@ -12,6 +12,8 @@ type Msg
     | UpdateAuth Auth
     | Name Team String
     | Score Team Int
+    | Broadcast
+    | OnSaveGame (WebData Game)
     | Channel String
     | TuneIn
     | OnFetchGame (WebData Game)

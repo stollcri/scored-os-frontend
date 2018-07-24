@@ -9,6 +9,10 @@ type Route
     | TuneInRoute String
     | NotFoundRoute
 
+type GameType
+    = Soccer
+    | Football
+
 type Team
     = TeamA
     | TeamB
@@ -26,13 +30,17 @@ type alias TeamData =
     }
 
 type alias Game =
-    { teamA: TeamData
+    { id: String
+    , teamA: TeamData
     , teamB: TeamData
     }
 
 type alias Model =
-    { auth: Auth
+    { app: String
+    , version: String
     , route: Route
+    , auth: Auth
+    , gameType: GameType
     , game: Game
     , channel: String
     , gameData: WebData Game
@@ -41,10 +49,14 @@ type alias Model =
 
 initialModel : Route -> Auth -> Model
 initialModel route auth =
-    { route = route
+    { app = "scoredy"
+    , version = "1.0.0"
+    , route = route
     , auth = auth
+    , gameType = Soccer
     , game =
-        { teamA = { name = "Team A", score = 0 }
+        { id = ""
+        , teamA = { name = "Team A", score = 0 }
         , teamB = { name = "Team B", score = 0 }
         }
     , channel = ""

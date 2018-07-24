@@ -61,9 +61,9 @@ broadcastButton auth =
             p [ class "control" ]
                 [ button
                     [ class "button is-primary"
-                    , onClick (Logout)
+                    , onClick (Broadcast)
                     ]
-                    [ text "Sign Out" ]
+                    [ text "Broadcast" ]
                 ]
 
 enterChannelView : String -> Html Msg
