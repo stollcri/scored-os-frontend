@@ -3,6 +3,7 @@ elm-stuff
 # elm-repl generated files
 repl-temp-*
 
+.cache
 .DS_Store
 dist
 elm.compiled.js

@@ -1,7 +1,0 @@
-{
-  "games": [
-    {"id": 1, "teamA": {"name": "CAK", "score": 1}, "teamB": {"name": "ISC", "score": 2}},
-    {"id": 2, "teamA": {"name": "RUS", "score": 5}, "teamB": {"name": "KSA", "score": 0}}
-  ]
-}
-
