@@ -40,7 +40,7 @@ saveGame game auth =
                     { method = htppMethod
                     , headers =
                         [ Http.header "Accept" "application/json"
-                        , Http.header "Authorization" ("Token " ++ auth.accessToken)
+                        , Http.header "Authorization" ("Token " ++ auth.idToken)
                         ]
                     , url = (fetchGameUrl game.id)
                     , body = Http.jsonBody (gameEncoder game)
