@@ -5,6 +5,8 @@ repl-temp-*
 
 .cache
 .DS_Store
+.env
+.env.development
 dist
 elm.compiled.js
 elm.js

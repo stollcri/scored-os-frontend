@@ -24,10 +24,10 @@ elm.ports.logout.subscribe(() => {
 //
 
 const webAuth = new auth0.WebAuth({
-  domain: 'scoredy.auth0.com',
-  clientID: 'jsm2JYWhpBMS2ZqeVbm0SudJcCRLCH-i',
+  domain: `${process.env.AUTH0_DOMAIN}`,
+  clientID: `${process.env.AUTH0_CLIENT_ID}`,
   responseType: 'token id_token',
-  audience: 'https://scoredy.auth0.com/userinfo',
+  audience: `${process.env.AUTH0_AUDIENCE}`,
   scope: 'openid',
   redirectUri: window.location.href
 });
@@ -62,10 +62,10 @@ function setSession(authResult) {
 }
 
 function logout() {
-  // TODO: Expand the logout (call Auth0 and expire token?)
   localStorage.removeItem('access_token');
   localStorage.removeItem('id_token');
   localStorage.removeItem('expires_at');
+  window.location = `${process.env.AUTH0_LOGOUT_URL}`;
 }
 
 handleAuthentication();
