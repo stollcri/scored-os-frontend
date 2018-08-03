@@ -61,8 +61,8 @@ update msg model =
         TuneIn ->
             ( model, load ("#games/" ++ model.channel) )
 
-        OnGameDataUpdate gameData ->
-            ( { model | gameData = gameData }, Cmd.none )
+        OnRemoteGameUpdate remoteGameData ->
+            ( { model | remoteGame = remoteGameData }, Cmd.none )
 
 updateLocation : Route -> Model -> ( Model, Cmd Msg )
 updateLocation route model =

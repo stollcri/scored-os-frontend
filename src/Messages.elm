@@ -16,4 +16,4 @@ type Msg
     | OnGameUpdate (WebData Game)
     | Channel String
     | TuneIn
-    | OnGameDataUpdate (WebData Game)
+    | OnRemoteGameUpdate (WebData Game)

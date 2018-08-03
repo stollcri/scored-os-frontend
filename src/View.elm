@@ -75,7 +75,7 @@ enterChannelView channel =
 
 tuneInView : Model -> String -> Html Msg
 tuneInView model id =
-    case model.gameData of
+    case model.remoteGame of
         RemoteData.NotAsked ->
             div []
                 [ Views.Header.show

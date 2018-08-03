@@ -43,7 +43,7 @@ type alias Model =
     , gameType: GameType
     , game: Game
     , channel: String
-    , gameData: WebData Game
+    , remoteGame: WebData Game
     }
 
 
@@ -60,5 +60,5 @@ initialModel route auth =
         , teamB = { name = "Team B", score = 0 }
         }
     , channel = ""
-    , gameData = RemoteData.NotAsked
+    , remoteGame = RemoteData.NotAsked
     }

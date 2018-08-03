@@ -41,7 +41,7 @@ getGame gameId =
         gameId ->
             Http.get (getGameUrl gameId) gameDecoder
                 |> RemoteData.sendRequest
-                |> Cmd.map OnGameDataUpdate
+                |> Cmd.map OnRemoteGameUpdate
 
 saveGame : Game -> Auth -> Cmd Msg
 saveGame game auth =
