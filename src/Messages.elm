@@ -1,6 +1,6 @@
 module Messages exposing (..)
 
-import Models exposing (Auth, Game, Team)
+import Models exposing (Auth, Game, Games, Team)
 import Navigation exposing (Location)
 import RemoteData exposing (WebData)
 
@@ -10,6 +10,7 @@ type Msg
     | Login
     | Logout
     | UpdateAuth Auth
+    | OnFindGame (WebData Games)
     | Name Team String
     | Score Team Int
     | Broadcast

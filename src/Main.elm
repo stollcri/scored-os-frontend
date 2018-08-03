@@ -19,7 +19,6 @@ init auth location =
         case currentRoute of
             BroadcastRoute ->
                 ( model, (findGame model.game model.auth) )
-                -- TODO: fetch game by user id (we don't have the userid here yet)
 
             TuneInRoute channel ->
                 ( model, (getGame channel) )

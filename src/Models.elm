@@ -35,6 +35,13 @@ type alias Game =
     , teamB: TeamData
     }
 
+type alias Games =
+    { limit: Int
+    , skip: Int
+    , total: Int
+    , data: List Game
+    }
+
 type alias Model =
     { app: String
     , version: String

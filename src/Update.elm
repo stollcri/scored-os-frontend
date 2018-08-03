@@ -29,6 +29,30 @@ update msg model =
         UpdateAuth auth ->
             ( { model | auth = auth }, Cmd.none )
 
+        OnFindGame gameData ->
+            case gameData of
+                RemoteData.Success games ->
+                    let
+                        foundGame = 
+                            case List.head games.data of
+                                Nothing ->
+                                    model.game
+
+                                Just val ->
+                                    val
+                    in
+                        ( { model | game = foundGame }, Cmd.none )
+
+                RemoteData.Failure err ->
+                    let
+                        _ = Debug.log "error in OnFindGame" err
+                    in
+                        ( model, Cmd.none )
+                --     ( model, login "" )
+
+                _ ->
+                    ( model, Cmd.none )
+
         Name team name ->
             ( { model | game = updateGame msg model.game }
             , (saveGame model.game model.auth)

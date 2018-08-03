@@ -7,7 +7,7 @@ import Json.Decode.Pipeline exposing (decode, required)
 import Json.Encode as Encode
 
 import Messages exposing (..)
-import Models exposing (Auth, Game, TeamData)
+import Models exposing (Auth, Game, Games, TeamData)
 
 
 findGame : Game -> Auth -> Cmd Msg
@@ -25,12 +25,12 @@ findGame game auth =
                     ]
                 , url = (findGameUrl game.id)
                 , body = Http.emptyBody
-                , expect = Http.expectJson gameDecoder
+                , expect = Http.expectJson gamesDecoder
                 , timeout = Nothing
                 , withCredentials = False
                 }
                 |> RemoteData.sendRequest
-                |> Cmd.map OnGameUpdate
+                |> Cmd.map OnFindGame
 
 getGame : String -> Cmd Msg
 getGame gameId =
@@ -82,6 +82,14 @@ findGameUrl gameId =
 getGameUrl : String -> String
 getGameUrl gameId =
     "http://localhost:3030/broadcasts/" ++ gameId
+
+gamesDecoder : Decode.Decoder Games
+gamesDecoder =
+    decode Games
+        |> required "limit" Decode.int
+        |> required "skip" Decode.int
+        |> required "total" Decode.int
+        |> required "data" (Decode.list gameDecoder)
 
 gameDecoder : Decode.Decoder Game
 gameDecoder =
