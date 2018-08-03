@@ -13,7 +13,7 @@ type Msg
     | Name Team String
     | Score Team Int
     | Broadcast
-    | OnSaveGame (WebData Game)
+    | OnGameUpdate (WebData Game)
     | Channel String
     | TuneIn
-    | OnFetchGame (WebData Game)
+    | OnGameDataUpdate (WebData Game)

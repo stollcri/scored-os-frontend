@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Navigation exposing (Location)
 
-import Commands exposing (fetchGame)
+import Commands exposing (findGame, getGame)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (..)
@@ -17,11 +17,15 @@ init auth location =
         model = initialModel currentRoute auth
     in
         case currentRoute of
+            BroadcastRoute ->
+                ( model, (findGame model.game model.auth) )
+                -- TODO: fetch game by user id (we don't have the userid here yet)
+
             TuneInRoute channel ->
-                ( model, (fetchGame channel) )
+                ( model, (getGame channel) )
 
             _ ->
-                ( model, (fetchGame "") )
+                ( model, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

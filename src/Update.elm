@@ -4,7 +4,7 @@ import Navigation exposing (load)
 import RemoteData
 import WebSocket
 
-import Commands exposing (fetchGame, saveGame)
+import Commands exposing (getGame, saveGame)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (parseLocation)
@@ -43,7 +43,7 @@ update msg model =
         Broadcast ->
             ( model, (saveGame model.game model.auth) )
 
-        OnSaveGame gameData ->
+        OnGameUpdate gameData ->
             case gameData of
                 RemoteData.Success game ->
                     let
@@ -61,7 +61,7 @@ update msg model =
         TuneIn ->
             ( model, load ("#games/" ++ model.channel) )
 
-        OnFetchGame gameData ->
+        OnGameDataUpdate gameData ->
             ( { model | gameData = gameData }, Cmd.none )
 
 updateLocation : Route -> Model -> ( Model, Cmd Msg )
@@ -69,7 +69,7 @@ updateLocation route model =
     case route of
         TuneInRoute gameId ->
             let newRoute = route
-            in ( { model | route = newRoute }, (fetchGame gameId) )
+            in ( { model | route = newRoute }, (getGame gameId) )
 
         EnterChannelRoute ->
             let newRoute = route

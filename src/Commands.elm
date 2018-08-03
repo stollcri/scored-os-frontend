@@ -1,4 +1,4 @@
-module Commands exposing (fetchGame, saveGame)
+module Commands exposing (findGame, getGame, saveGame)
 
 import Http
 import RemoteData
@@ -10,16 +10,38 @@ import Messages exposing (..)
 import Models exposing (Auth, Game, TeamData)
 
 
-fetchGame : String -> Cmd Msg
-fetchGame gameId =
+findGame : Game -> Auth -> Cmd Msg
+findGame game auth =
+    case auth.accessToken of
+        "" ->
+            Cmd.none
+
+        _ ->
+            Http.request
+                { method = "GET"
+                , headers =
+                    [ Http.header "Accept" "application/json"
+                    , Http.header "Authorization" ("Bearer " ++ auth.accessToken)
+                    ]
+                , url = (findGameUrl game.id)
+                , body = Http.emptyBody
+                , expect = Http.expectJson gameDecoder
+                , timeout = Nothing
+                , withCredentials = False
+                }
+                |> RemoteData.sendRequest
+                |> Cmd.map OnGameUpdate
+
+getGame : String -> Cmd Msg
+getGame gameId =
     case gameId of
         "" ->
             Cmd.none
 
         gameId ->
-            Http.get (fetchGameUrl gameId) gameDecoder
+            Http.get (getGameUrl gameId) gameDecoder
                 |> RemoteData.sendRequest
-                |> Cmd.map OnFetchGame
+                |> Cmd.map OnGameDataUpdate
 
 saveGame : Game -> Auth -> Cmd Msg
 saveGame game auth =
@@ -40,21 +62,25 @@ saveGame game auth =
                     { method = htppMethod
                     , headers =
                         [ Http.header "Accept" "application/json"
-                        , Http.header "Authorization" ("Token " ++ auth.idToken)
+                        , Http.header "Authorization" ("Bearer " ++ auth.accessToken)
                         ]
-                    , url = (fetchGameUrl game.id)
+                    , url = (getGameUrl game.id)
                     , body = Http.jsonBody (gameEncoder game)
                     , expect = Http.expectJson gameDecoder
                     , timeout = Nothing
                     , withCredentials = False
                     }
                     |> RemoteData.sendRequest
-                    |> Cmd.map OnSaveGame
+                    |> Cmd.map OnGameUpdate
 
 -- PRIVATE
 
-fetchGameUrl : String -> String
-fetchGameUrl gameId =
+findGameUrl : String -> String
+findGameUrl gameId =
+    "http://localhost:3030/broadcasts/?"
+
+getGameUrl : String -> String
+getGameUrl gameId =
     "http://localhost:3030/broadcasts/" ++ gameId
 
 gameDecoder : Decode.Decoder Game
