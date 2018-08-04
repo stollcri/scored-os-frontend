@@ -23,6 +23,8 @@ elm.ports.logout.subscribe(() => {
 // Auth0
 //
 
+var tokenRenewalTimeout;
+
 const webAuth = new auth0.WebAuth({
   domain: `${process.env.AUTH0_DOMAIN}`,
   clientID: `${process.env.AUTH0_CLIENT_ID}`,
@@ -59,14 +61,47 @@ function setSession(authResult) {
   localStorage.setItem('access_token', authResult.accessToken);
   localStorage.setItem('id_token', authResult.idToken);
   localStorage.setItem('expires_at', expiresAt);
+  scheduleRenewal();
 }
 
 function logout() {
+  clearTimeout(tokenRenewalTimeout);
   localStorage.removeItem('access_token');
   localStorage.removeItem('id_token');
   localStorage.removeItem('expires_at');
   window.location = `${process.env.AUTH0_LOGOUT_URL}`;
 }
+
+function renewToken() {
+  webAuth.checkSession({},
+    function(err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        setSession(result);
+      }
+    }
+  );
+}
+
+function scheduleRenewal() {
+  var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+  // if the token is expired renew it, otherwise schedule renewal
+  if (Date.now() > expiresAt) {
+    renewToken();
+  } else {
+    var delay = expiresAt - Date.now();
+    if (delay > 0) {
+      tokenRenewalTimeout = setTimeout(function() {
+        renewToken();
+      }, delay);
+    }
+  }
+}
+
+window.addEventListener('load', function() {
+  scheduleRenewal();
+});
 
 handleAuthentication();
 

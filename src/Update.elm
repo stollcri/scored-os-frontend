@@ -48,7 +48,6 @@ update msg model =
                         _ = Debug.log "error in OnFindGame" err
                     in
                         ( model, Cmd.none )
-                --     ( model, login "" )
 
                 _ ->
                     ( model, Cmd.none )
