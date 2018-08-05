@@ -31,6 +31,7 @@ type alias TeamData =
 
 type alias Game =
     { id: String
+    , gameType: GameType
     , teamA: TeamData
     , teamB: TeamData
     }
@@ -47,7 +48,6 @@ type alias Model =
     , version: String
     , route: Route
     , auth: Auth
-    , gameType: GameType
     , game: Game
     , channel: String
     , remoteGame: WebData Game
@@ -60,9 +60,9 @@ initialModel route auth =
     , version = "1.0.0"
     , route = route
     , auth = auth
-    , gameType = Soccer
     , game =
         { id = ""
+        , gameType = Soccer
         , teamA = { name = "Team A", score = 0 }
         , teamB = { name = "Team B", score = 0 }
         }

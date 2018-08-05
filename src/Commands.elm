@@ -7,7 +7,7 @@ import Json.Decode.Pipeline exposing (decode, required)
 import Json.Encode as Encode
 
 import Messages exposing (..)
-import Models exposing (Auth, Game, Games, TeamData)
+import Models exposing (Auth, Game, Games, GameType, TeamData)
 
 
 findGame : Game -> Auth -> Cmd Msg
@@ -95,8 +95,20 @@ gameDecoder : Decode.Decoder Game
 gameDecoder =
     decode Game
         |> required "_id" Decode.string
+        |> required "gameType" gameTypeDecoder
         |> required "teamA" teamDecoder
         |> required "teamB" teamDecoder
+
+gameTypeDecoder : Decode.Decoder GameType
+gameTypeDecoder =
+    Decode.string
+        |> Decode.andThen (\str ->
+           case str of
+                "football" ->
+                    Decode.succeed Models.Football
+                somethingElse ->
+                    Decode.succeed Models.Soccer
+        )
 
 teamDecoder : Decode.Decoder TeamData
 teamDecoder =
@@ -107,9 +119,23 @@ teamDecoder =
 gameEncoder : Game -> Encode.Value
 gameEncoder game =
     Encode.object
-        [ ( "teamA", (teamEncoder game.teamA) )
+        [ ( "gameType", (gameTypeEncoder game.gameType) )
+        , ( "teamA", (teamEncoder game.teamA) )
         , ( "teamB", (teamEncoder game.teamB) )
         ]
+
+gameTypeEncoder : GameType -> Encode.Value
+gameTypeEncoder gameType =
+    let
+        gameTypeEncoded =
+            case gameType of
+                Models.Soccer ->
+                    "soccer"
+
+                Models.Football ->
+                    "football"
+    in
+        Encode.string gameTypeEncoded
 
 teamEncoder : TeamData -> Encode.Value
 teamEncoder teamData =
