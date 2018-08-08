@@ -3,9 +3,7 @@ port module Update exposing (..)
 import Navigation exposing (load)
 import RemoteData
 
-import Commands exposing (getGame, saveGame, decodeSocketUpdate)
-import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, required)
+import Commands exposing (getGame,  saveGame, decodeSocketUpdate)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (parseLocation)
@@ -55,17 +53,17 @@ update msg model =
 
         Name team name ->
             ( { model | game = updateGame msg model.game }
-            , (saveGame model.game model.auth)
+            , (saveGame model.config model.auth model.game)
             )
 
         Score team score ->
             let
                 updatedModel = { model | game = updateGame msg model.game }
             in
-                ( updatedModel, (saveGame updatedModel.game updatedModel.auth))
+                ( updatedModel, (saveGame updatedModel.config updatedModel.auth updatedModel.game))
 
         Broadcast ->
-            ( model, (saveGame model.game model.auth) )
+            ( model, (saveGame model.config model.auth model.game) )
 
         OnGameUpdate gameData ->
             case gameData of
@@ -106,7 +104,7 @@ updateLocation route model =
     case route of
         TuneInRoute gameId ->
             let newRoute = route
-            in ( { model | route = newRoute }, (getGame gameId) )
+            in ( { model | route = newRoute }, (getGame model.config gameId) )
 
         EnterChannelRoute ->
             let newRoute = route

@@ -1,9 +1,15 @@
 const Elm = require('./Main');
 
 const elm = Elm.Main.fullscreen({
-  accessToken: localStorage.getItem('access_token') ? localStorage.getItem('access_token') : '',
-  idToken: localStorage.getItem('id_token') ? localStorage.getItem('id_token') : '',
-  expiresAt: localStorage.getItem('expires_at') ? localStorage.getItem('expires_at') : ''
+  config: {
+    urlApiRest: process.env.API_URL_REST,
+    urlApiWebsocket: process.env.API_URL_WEBSOCKET
+  },
+  auth: {
+    accessToken: localStorage.getItem('access_token') ? localStorage.getItem('access_token') : '',
+    idToken: localStorage.getItem('id_token') ? localStorage.getItem('id_token') : '',
+    expiresAt: localStorage.getItem('expires_at') ? localStorage.getItem('expires_at') : ''
+  }
 });
 
 elm.ports.login.subscribe(() => {

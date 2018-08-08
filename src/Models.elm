@@ -22,6 +22,16 @@ type GameUpdateData
     | UpdateData Game
 
 
+type alias Flags =
+    { config: Config
+    , auth: Auth
+    }
+
+type alias Config =
+    { urlApiRest: String
+    , urlApiWebsocket: String
+    }
+
 type alias Auth =
     { accessToken: String
     , idToken: String
@@ -55,6 +65,7 @@ type alias GameUpdate =
 type alias Model =
     { app: String
     , version: String
+    , config: Config
     , route: Route
     , auth: Auth
     , game: Game
@@ -63,12 +74,13 @@ type alias Model =
     }
 
 
-initialModel : Route -> Auth -> Model
-initialModel route auth =
+initialModel : Flags -> Route -> Model
+initialModel flags route =
     { app = "scoredy"
     , version = "1.0.0"
+    , config = flags.config
     , route = route
-    , auth = auth
+    , auth = flags.auth
     , game =
         { id = ""
         , gameType = Soccer

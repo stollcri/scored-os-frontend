@@ -13,18 +13,18 @@ import View exposing (view)
 import WebSocket
 
 
-init : Auth -> Location -> ( Model, Cmd Msg )
-init auth location =
+init : Flags -> Location -> ( Model, Cmd Msg )
+init flags location =
     let
         currentRoute = parseLocation location
-        model = initialModel currentRoute auth
+        model = initialModel flags currentRoute
     in
         case currentRoute of
             BroadcastRoute ->
-                ( model, (findGame model.game model.auth) )
+                ( model, (findGame model.config model.auth model.game) )
 
             TuneInRoute channel ->
-                ( model, (getGame channel) )
+                ( model, (getGame model.config channel) )
 
             _ ->
                 ( model, Cmd.none )
@@ -48,14 +48,14 @@ subscriptions model =
                 Sub.batch
                     [ updateAuth UpdateAuth
                     , WebSocket.listen
-                        ("ws://localhost:3030/primus")
+                        model.config.urlApiWebsocket
                         OnRemoteGameUpdateSocket
                     ]
 
 -- Got this error?
 --   Expecting an object with a field named ____ but instead got: undefined
 -- When using elm-reactor do not run this program, run Reactor.elm
-main : Program Auth Model Msg
+main : Program Flags Model Msg
 main = 
     Navigation.programWithFlags OnLocationChange
         { init = init

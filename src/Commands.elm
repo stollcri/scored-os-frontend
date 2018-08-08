@@ -11,8 +11,8 @@ import Models exposing (..)
 import RemoteData exposing (WebData)
 
 
-findGame : Game -> Auth -> Cmd Msg
-findGame game auth =
+findGame : Config -> Auth -> Game -> Cmd Msg
+findGame config auth game =
     case auth.accessToken of
         "" ->
             Cmd.none
@@ -24,7 +24,7 @@ findGame game auth =
                     [ Http.header "Accept" "application/json"
                     , Http.header "Authorization" ("Bearer " ++ auth.accessToken)
                     ]
-                , url = (findGameUrl game.id)
+                , url = (findGameUrl config game.id)
                 , body = Http.emptyBody
                 , expect = Http.expectJson gamesDecoder
                 , timeout = Nothing
@@ -33,19 +33,19 @@ findGame game auth =
                 |> RemoteData.sendRequest
                 |> Cmd.map OnFindGame
 
-getGame : String -> Cmd Msg
-getGame gameId =
+getGame : Config -> String -> Cmd Msg
+getGame config gameId =
     case gameId of
         "" ->
             Cmd.none
 
         gameId ->
-            Http.get (getGameUrl gameId) gameDecoder
+            Http.get (getGameUrl config gameId) gameDecoder
                 |> RemoteData.sendRequest
                 |> Cmd.map OnRemoteGameUpdate
 
-saveGame : Game -> Auth -> Cmd Msg
-saveGame game auth =
+saveGame : Config -> Auth -> Game -> Cmd Msg
+saveGame config auth game =
     case auth.accessToken of
         "" ->
             Cmd.none
@@ -65,7 +65,7 @@ saveGame game auth =
                         [ Http.header "Accept" "application/json"
                         , Http.header "Authorization" ("Bearer " ++ auth.accessToken)
                         ]
-                    , url = (getGameUrl game.id)
+                    , url = (getGameUrl config game.id)
                     , body = Http.jsonBody (gameEncoder game)
                     , expect = Http.expectJson gameDecoder
                     , timeout = Nothing
@@ -90,13 +90,13 @@ decodeSocketUpdate socketUpdate =
 
 -- PRIVATE
 
-findGameUrl : String -> String
-findGameUrl gameId =
-    "http://localhost:3030/broadcasts/?"
+findGameUrl : Config -> String -> String
+findGameUrl config gameId =
+    config.urlApiRest ++ "/broadcasts/?"
 
-getGameUrl : String -> String
-getGameUrl gameId =
-    "http://localhost:3030/broadcasts/" ++ gameId
+getGameUrl : Config -> String -> String
+getGameUrl config gameId =
+    config.urlApiRest ++ "/broadcasts/" ++ gameId
 
 gamesDecoder : Decode.Decoder Games
 gamesDecoder =
