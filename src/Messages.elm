@@ -18,3 +18,4 @@ type Msg
     | Channel String
     | TuneIn
     | OnRemoteGameUpdate (WebData Game)
+    | OnRemoteGameUpdateSocket String

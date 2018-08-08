@@ -17,6 +17,10 @@ type Team
     = TeamA
     | TeamB
 
+type GameUpdateData
+    = BroadcastsPatched
+    | UpdateData Game
+
 
 type alias Auth =
     { accessToken: String
@@ -41,6 +45,11 @@ type alias Games =
     , skip: Int
     , total: Int
     , data: List Game
+    }
+
+type alias GameUpdate =
+    { updateType: Int
+    , data: List GameUpdateData
     }
 
 type alias Model =

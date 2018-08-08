@@ -2,9 +2,10 @@ port module Update exposing (..)
 
 import Navigation exposing (load)
 import RemoteData
-import WebSocket
 
-import Commands exposing (getGame, saveGame)
+import Commands exposing (getGame, saveGame, decodeSocketUpdate)
+import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (decode, required)
 import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (parseLocation)
@@ -86,6 +87,19 @@ update msg model =
 
         OnRemoteGameUpdate remoteGameData ->
             ( { model | remoteGame = remoteGameData }, Cmd.none )
+
+        OnRemoteGameUpdateSocket rawRemoteGameData ->
+            if String.contains "primus::ping::" rawRemoteGameData then
+                ( model, Cmd.none )
+
+            else
+                case decodeSocketUpdate rawRemoteGameData of
+                    Just remoteGameData ->
+                        ( { model | remoteGame = remoteGameData }, Cmd.none )
+
+                    _ ->
+                        ( model, Cmd.none )
+
 
 updateLocation : Route -> Model -> ( Model, Cmd Msg )
 updateLocation route model =

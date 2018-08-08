@@ -1,4 +1,4 @@
-module Commands exposing (findGame, getGame, saveGame)
+module Commands exposing (findGame, getGame, saveGame, decodeSocketUpdate)
 
 import Http
 import RemoteData
@@ -7,7 +7,8 @@ import Json.Decode.Pipeline exposing (decode, required)
 import Json.Encode as Encode
 
 import Messages exposing (..)
-import Models exposing (Auth, Game, Games, GameType, TeamData)
+import Models exposing (..)
+import RemoteData exposing (WebData)
 
 
 findGame : Game -> Auth -> Cmd Msg
@@ -73,6 +74,20 @@ saveGame game auth =
                     |> RemoteData.sendRequest
                     |> Cmd.map OnGameUpdate
 
+decodeSocketUpdate : String -> Maybe (WebData Game)
+decodeSocketUpdate socketUpdate =
+    case Decode.decodeString gameUpdateDecoder socketUpdate of
+        Ok decodedGameData ->
+            case List.head (List.reverse decodedGameData.data) of
+                Just (UpdateData game) ->
+                    Just (RemoteData.Success game)
+
+                _ ->
+                    Nothing
+
+        _ ->
+            Nothing
+
 -- PRIVATE
 
 findGameUrl : String -> String
@@ -115,6 +130,42 @@ teamDecoder =
     decode TeamData
         |> required "name" Decode.string
         |> required "score" Decode.int
+
+gameUpdateDecoder : Decode.Decoder GameUpdate
+gameUpdateDecoder =
+    decode GameUpdate
+        |> required "type" Decode.int
+        |> required "data" (Decode.list gameUpdateDataDecoder)
+
+gameUpdateDataDecoder : Decode.Decoder GameUpdateData
+gameUpdateDataDecoder =
+    Decode.oneOf
+        [ gameUpdateDataStringDecoder
+        , gameUpdateDataGameDecoder
+        ]
+
+gameUpdateDataStringDecoder : Decode.Decoder GameUpdateData
+gameUpdateDataStringDecoder =
+    Decode.string
+        |> Decode.andThen (\str ->
+            case str of
+                "broadcasts patched" ->
+                    Decode.succeed BroadcastsPatched
+
+                _ ->
+                    let
+                        _ = Debug.log "gameUpdateDataStringDecoder" str
+                    in
+                        Decode.succeed BroadcastsPatched
+        )
+
+gameUpdateDataGameDecoder : Decode.Decoder GameUpdateData
+gameUpdateDataGameDecoder =
+    gameDecoder
+        |> Decode.andThen (\game ->
+            Decode.succeed (UpdateData game)
+        )
+
 
 gameEncoder : Game -> Encode.Value
 gameEncoder game =
