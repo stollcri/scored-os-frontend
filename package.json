@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "parcel serve src/_index.html --port 8088 --no-cache --out-file index.html"
+    "start": "parcel serve src/_index.html --port 8088 --no-cache --out-file index.html",
+    "build": "parcel build src/_index.html --out-file index.html"
   },
   "devDependencies": {
     "parcel-bundler": "^1.9.7",
