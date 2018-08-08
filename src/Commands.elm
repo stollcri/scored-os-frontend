@@ -92,7 +92,7 @@ decodeSocketUpdate socketUpdate =
 
 findGameUrl : Config -> String -> String
 findGameUrl config gameId =
-    config.urlApiRest ++ "/broadcasts/?"
+    config.urlApiRest ++ "/broadcasts/?q=my"
 
 getGameUrl : Config -> String -> String
 getGameUrl config gameId =
